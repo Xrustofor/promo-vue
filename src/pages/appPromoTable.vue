@@ -133,7 +133,7 @@ export default {
     methods: {
 
       async getItems(){
-        const items = await this.$store.dispatch('getPromoAll');
+        const items = await this.$store.dispatch('getPromoAll', false);
         items.map((item, index) => {
           const text = item.description.slice(0, 100) + '...';
           items[index].description = text;

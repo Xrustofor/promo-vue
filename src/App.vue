@@ -14,6 +14,7 @@
                 </v-row>
             </v-container>
           </v-main>
+          <NavigationDrawerRight/>
         <v-footer 
           color="primary"
           app
@@ -28,11 +29,12 @@
 
 import AppBar from "./components/particles/AppBar";
 import NavigationDrawer from "./components/particles/NavigationDrawer";
-
+import NavigationDrawerRight from "./components/particles/NavigationDrawerRight"
 export default {
   components: {
     AppBar,
-    NavigationDrawer
+    NavigationDrawer,
+    NavigationDrawerRight
   }
 }
 </script>

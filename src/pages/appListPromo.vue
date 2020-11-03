@@ -5,46 +5,44 @@
           v-for="(item, i) in items"
           :key="i"
           cols="10"
-          class="my-2"
+          class="my-3"
+          style="position: relative; z-index: 1;"
         >
           <v-card
             :color="item.color"
             dark
           >
-            <div class="d-flex flex-no-wrap justify-space-between">
+            <div class="d-flex justify-space-between">
               <v-col cols="6">
-                <v-card-title
-                  class="headline"
-                  v-text="item.title"
-                ></v-card-title>
-                <v-card-subtitle v-text="item.description" />
-                <v-card-actions>
-                    <v-btn
-                      v-if="item.artist === 'Ellie Goulding'"
-                      class="ml-2 mt-3"
-                      fab
-                      icon
-                      height="40px"
-                      right
-                      width="40px"
-                    >
-                      <v-icon>mdi-play</v-icon>
-                    </v-btn>
+                <v-row>
+                  <v-card-title
+                    class="headline"
+                    v-text="item.title"
+                  ></v-card-title>
+                  <v-spacer />
+                  <v-card-title
+                    class="headline"
+                    v-text="`Ціна: ${item.price} грн.`"
+                    style="font-size: 17px !important"
+                  ></v-card-title> 
+                </v-row>
 
-                    <v-btn
-                      v-else
-                      class="ml-2 mt-5"
-                      outlined
-                      rounded
-                      small
-                    >
-                      START RADIO
-                    </v-btn>
-                  </v-card-actions>
+                <v-card-subtitle 
+                  v-text="item.description"
+                  style="max-height: 120px; overflow: hidden;"
+                />
               </v-col>
+              <v-card-actions 
+                style="position: absolute; bottom: 10px;"
+              >
+                
+                <v-btn class="ml-2 mt-5">
+                  <router-link class="style-tag" :to="`/promo/${item.id}`">Переглянути</router-link>
+                </v-btn>
+              </v-card-actions>
 
               <v-col cols="6">
-                <v-carousel>
+                <v-carousel height="300">
                   <v-carousel-item
                     v-for="(img, i) in item.images"
                     :key="i"
@@ -58,27 +56,42 @@
           </v-card>
         </v-col>
       </v-row>
+      <div class="text-center mt-4">
+        <v-pagination
+          v-model="currentPage"
+          :length="count"
+          :disabled="paginationLoad"
+        ></v-pagination>
+      </div>
     </v-container>
 </template>
 <script>
 export default {
   data: () => ({
-      items: [],
+      paginationLoad: false,
+      currentPage: null,
   }),
-  created(){
-    this.getItems()
+  async created(){
+    await this.$store.dispatch('getPromoAll', true);
+    this.currentPage = this.$store.getters.getCurrentPage;    
   },
-  methods: {
-    async getItems(){
-      const items = await this.$store.dispatch('getPromoAll');
-      items.map((item, index) => {
-        const text = item.description.slice(0, 100) + '...';
-        items[index].description = text;
-      })
-      this.items = items;
+  watch: {
+    async currentPage(val){
+      this.$store.commit('setCurrentPage', val);
+      this.paginationLoad = true;
+      await this.$store.dispatch('getPromoAll', true);
+      this.paginationLoad = false;
+    }
+  },
+  computed:{
+    count(){
+      return this.$store.getters.getCountPages;
     },
-  }
-
+    items() {
+      let items = this.$store.getters.getItems;
+      return items.result
+    },
+  },
 }
 </script>
 <style scoped>

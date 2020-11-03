@@ -208,8 +208,7 @@ export default {
         });
 
         imagesTitles = JSON.stringify(imagesTitles);
-        
-        console.log(imagesTitles);
+
         const fd = new FormData()
 
         fd.append('title', this.title);
@@ -222,7 +221,7 @@ export default {
           fd.append('image', images[i]);
         }
         await this.$store.dispatch('addPromo', fd);
-        this.$router.push('/promo-table');
+        //this.$router.push('/promo-table');
       },
       // clear () {
       //   this.title = '';

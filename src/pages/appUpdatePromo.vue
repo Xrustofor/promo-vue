@@ -265,7 +265,6 @@ export default {
         this.imagesStart[0].select = true;
       },
       addImage(val){
-        console.log(val);
         let item = {
           title: '',
           file: val.file,
@@ -319,8 +318,6 @@ export default {
 
         imagesTitles = JSON.stringify(imagesTitles);
 
-        console.log(imagesTitles);
-       
         const fd = new FormData()
         fd.append('title', this.title);
         fd.append('description', this.description);
